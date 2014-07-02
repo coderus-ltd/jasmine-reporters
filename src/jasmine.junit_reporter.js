@@ -44,12 +44,15 @@
      *                  "Class init"); default: true
      * @param {string} [filePrefix] is the string value that is prepended to the
      *                  xml output file; default: 'TEST-'
+     * @param {string} [packageName] is the string value that is prepended to the
+     *                  testcase class names; default: ''
      */
-    var JUnitXmlReporter = function(savePath, consolidate, useDotNotation, filePrefix) {
+    var JUnitXmlReporter = function(savePath, consolidate, useDotNotation, filePrefix, packageName) {
         this.savePath = savePath || '';
         this.consolidate = consolidate === jasmine.undefined ? true : consolidate;
         this.useDotNotation = useDotNotation === jasmine.undefined ? true : useDotNotation;
         this.filePrefix = filePrefix || 'TEST-';
+        this.packageName = packageName;
     };
     JUnitXmlReporter.started_at = null; // will be updated when test runner start
     JUnitXmlReporter.finished_at = null; // will be updated after all files have been written
@@ -212,6 +215,10 @@
             }
             else {
                 fullName = suite.getFullName();
+            }
+
+            if (this.packageName) {
+                fullName = this.packageName + '.' + fullName;
             }
 
             // Either remove or escape invalid XML characters
